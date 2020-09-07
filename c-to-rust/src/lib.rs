@@ -10,8 +10,7 @@ pub extern "C" fn double_input(input: i32) -> i32 {
 
 #[no_mangle]
 pub extern "C" fn hello_world() -> *mut c_char {
-    let hello = CString::new("Hello World!").unwrap().into_raw();
-    hello
+    CString::new("Hello World!").unwrap().into_raw()
 }
 
 #[no_mangle]

@@ -11,8 +11,9 @@ else
 endif
 endif
 
-all: target/double
+all: target/double target/double_dyn
 	target/double
+	target/double_dyn
 
 target:
 	mkdir -p $@
@@ -20,8 +21,14 @@ target:
 target/double: target/main.o target/debug/libdouble_input.a
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+target/double_dyn: target/main.o target/debug/libdouble_input.so
+	$(CC) -o $@ $^ $(LDFLAGS)
+
 target/debug/libdouble_input.a: src/lib.rs Cargo.toml
 	cargo build
+
+target/debug/libdouble_input.so: target/debug/libdouble_input.a
+	$(CC) -shared -o $@ -u free_string $^
 
 target/main.o: src/main.c | target
 	$(CC) -o $@ -c $<

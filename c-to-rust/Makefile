@@ -1,7 +1,14 @@
 ifeq ($(shell uname),Darwin)
+# MacOS
     LDFLAGS := -Wl,-dead_strip
 else
+ifeq ($(shell uname -o),Msys)
+# Windows (Msys)
+    LDFLAGS := -ladvapi32 -lws2_32 -luserenv -lshell32 -lmsvcrt
+else
+# Linux or other Unix
     LDFLAGS := -Wl,--gc-sections -lpthread -ldl
+endif
 endif
 
 all: target/double

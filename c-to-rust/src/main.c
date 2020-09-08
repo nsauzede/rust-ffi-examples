@@ -1,9 +1,6 @@
-#include <stdint.h>
 #include <stdio.h>
 
-extern int32_t double_input(int32_t input);
-extern char *hello_world();
-extern void free_string(char *ptr);
+#include "my_library.h"
 
 int main() {
     int input = 4;

@@ -11,6 +11,8 @@ else
 endif
 endif
 
+CFLAGS := -I target/debug
+
 all: target/double target/double_dyn
 	target/double
 	target/double_dyn
@@ -27,11 +29,14 @@ target/double_dyn: target/main.o target/debug/libdouble_input.so
 target/debug/libdouble_input.a: src/lib.rs Cargo.toml
 	cargo build
 
+target/debug/my_library.h:
+	cargo build
+
 target/debug/libdouble_input.so: target/debug/libdouble_input.a
 	$(CC) -shared -o $@ -u free_string $^
 
-target/main.o: src/main.c | target
-	$(CC) -o $@ -c $<
+target/main.o: src/main.c target/debug/my_library.h | target
+	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
 	rm -rf target

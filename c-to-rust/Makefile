@@ -5,6 +5,7 @@ else
 ifeq ($(shell uname -o),Msys)
 # Windows (Msys)
     LDFLAGS := -ladvapi32 -lws2_32 -luserenv -lshell32 -lmsvcrt
+    EXEC_PFX := PATH="${PATH}:target/debug"
 else
 # Linux or other Unix
     LDFLAGS := -Wl,--gc-sections -lpthread -ldl
@@ -15,7 +16,7 @@ CFLAGS := -I target/debug
 
 all: target/double target/double_dyn
 	target/double
-	target/double_dyn
+	$(EXEC_PFX) target/double_dyn
 
 target:
 	mkdir -p $@
@@ -33,7 +34,7 @@ target/debug/my_library.h:
 	cargo build
 
 target/debug/libdouble_input.so: target/debug/libdouble_input.a
-	$(CC) -shared -o $@ -u free_string $^
+	$(CC) -shared -o $@ -u free_string $^ $(LDFLAGS)
 
 target/main.o: src/main.c target/debug/my_library.h | target
 	$(CC) -o $@ -c $< $(CFLAGS)
